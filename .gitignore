@@ -8,7 +8,7 @@
 # Ignore model weight directories
 notebooks/*
 !notebooks/
-!00_hi_initial_exploration_1.ipynb
+!00_hi_initial_exploration.ipynb
 !01_subsetting_and_formatting.ipynb
 !02a_scvi_run_log.sh
 !03_mrvi_run_log.sh
