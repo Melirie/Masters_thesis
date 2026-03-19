@@ -1,0 +1,24 @@
+# Ignore large data files
+*.h5ad
+*.nc
+*.pkl
+*.yml
+!human_intestinal.yml
+
+# Ignore model weight directories
+notebooks/*
+!notebooks/
+!00_hi_initial_exploration_1.ipynb
+!02a_scvi_run_log.sh
+!03_mrvi_run_log.sh
+
+outputs/
+logs/
+data/
+published_code/
+src/
+tests/
+
+# Ignore virtual environments
+venv/
+.conda/
