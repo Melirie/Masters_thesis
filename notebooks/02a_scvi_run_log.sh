@@ -37,6 +37,9 @@ import matplotlib.pyplot as plt
 import time
 import pandas as pd
 
+#if __name__ == "__main__":
+#    mp.set_start_method('spawn', force=True) #test if issues persist with multiprocessing
+
 # Hardware Setup
 torch.set_float32_matmul_precision('high')
 
@@ -54,8 +57,6 @@ config = {
 # Data Loading
 print("Loading data...")
 adata = sc.read_h5ad(input_file)
-adata.layers['counts'] = adata.raw.X.copy()
-
 
 # 2. Dynamic Logging Header
 print("="*40)
@@ -87,12 +88,12 @@ model.train(
     early_stopping=config["early_stopping"],
     enable_progress_bar=True, #testing if it works, can be changed to True for better monitoring
     accelerator='gpu', 
-    devices=1,
-    datasplitter_kwargs={
-        'num_workers': 4,
-        'pin_memory': True,
-        'persistent_workers': True
-    }
+    devices=1
+    # datasplitter_kwargs={
+        # 'num_workers': 4,
+        # 'pin_memory': True,
+        # 'persistent_workers': True
+    # }
 )
 
 

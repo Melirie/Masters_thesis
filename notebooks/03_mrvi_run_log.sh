@@ -50,9 +50,10 @@ config = {
     "input_path": input_file,
     "batch_size": 1024,
     "max_epochs": 1000,
-    "sample_key": 'donor_disease_category',
     "early_stopping": True,
-    "batch_key": 'sampleID'
+    "sample_key": 'donor_disease_category',
+    "batch_key": 'sampleID',
+    "labels_key": 'level_2_annot' # is optional, only for later comparisons, but lengthens training time
 }
 
 # 2. Data Loading
@@ -76,7 +77,8 @@ print("="*40)
 
 sample_key = config["sample_key"]  # target covariate
 batch_key=config["batch_key"]  # nuisance variable identifier
-MRVI.setup_anndata(adata, layer="counts", sample_key=sample_key, batch_key=batch_key, backend="torch")
+labels_key=config["labels_key"]  # optional, for visualization
+MRVI.setup_anndata(adata, layer="counts", sample_key=sample_key, batch_key=batch_key, labels_key=labels_key, backend="torch")
 model = MRVI(adata)
  
 
@@ -127,10 +129,10 @@ adata.obsm["X_mrVI_z"] = model.get_latent_representation(give_z=True)
 # Cleaned up path
 final_adata_path = f'/home/melrie/human_intestinal/data/adata_mrvi_{job_id}.h5ad'
 
-print(f"Saving AnnData to {final_adata_path}...")
-adata.write_h5ad(final_adata_path)
+#print(f"Saving AnnData to {final_adata_path}...")
+#adata.write_h5ad(final_adata_path)
 
-print(f"Latents saved into AnnData at: {final_adata_path}")
+#print(f"Latents saved into AnnData at: {final_adata_path}")
 
 # Plotting Metrics
 history = model.history
@@ -157,6 +159,6 @@ echo "JOB FINISHED SUCCESSFULLY"
 echo "Date: $(date)"
 echo "Check outputs at:"
 echo "Model Directory: /home/melrie/human_intestinal/outputs/models/mrvi_model_${SLURM_JOB_ID}"
-echo "Integrated data:   /home/melrie/human_intestinal/data/adata_mrvi_${SLURM_JOB_ID}.h5ad"
+#echo "Integrated data:   /home/melrie/human_intestinal/data/adata_mrvi_${SLURM_JOB_ID}.h5ad"
 echo "Metrics Plot:    /home/melrie/human_intestinal/outputs/figures/model_metrics_job_${SLURM_JOB_ID}.png"
 echo "----------------------------------------------------"
