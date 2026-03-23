@@ -12,6 +12,8 @@ notebooks/*
 !01_subsetting_and_formatting.ipynb
 !02a_scvi_run_log.sh
 !03_mrvi_run_log.sh
+!04_UMAP_scvi_mrvi.ipynb
+!04a_UMAP_interactive_viewer.ipynb
 
 outputs/
 logs/
