@@ -25,15 +25,15 @@ jobs:
         # We use standard bash, but we add 'micromamba run -n <env_name>' 
         # to ensure it uses your conda-forge environment
         run: |
-          micromamba run -n Bioinfo-CI python -m pip install ruff nbconvert scanpy scvi-tools
-          micromamba run -n Bioinfo-CI ruff check . --output-format=github
+          micromamba run -n human_intestinal python -m pip install ruff nbconvert scanpy scvi-tools
+          micromamba run -n human_intestinal ruff check . --output-format=github
           
           # Convert and Compile
           mkdir -p notebooks
           if ls notebooks/*.ipynb 1> /dev/null 2>&1; then
-            micromamba run -n Bioinfo-CI jupyter nbconvert --to python notebooks/*.ipynb
+            micromamba run -n human_intestinal jupyter nbconvert --to python notebooks/*.ipynb
             for file in notebooks/*.py; do
               echo "Checking $file..."
-              micromamba run -n Bioinfo-CI python -m py_compile "$file"
+              micromamba run -n human_intestinal python -m py_compile "$file"
             done
           fi
