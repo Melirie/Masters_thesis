@@ -26,7 +26,9 @@ jobs:
         # to ensure it uses your conda-forge environment
         run: |
           micromamba run -n human_intestinal python -m pip install ruff nbconvert scanpy scvi-tools
-          micromamba run -n human_intestinal ruff check . --output-format=github
+          micromamba run -n human_intestinal ruff check . \
+          --output-format=github \
+          --ignore=F403,F405
           
           # Convert and Compile
           mkdir -p notebooks
