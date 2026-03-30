@@ -13,32 +13,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Using Micromamba for fast, reliable bioinfo environments
       - name: Set up Conda Environment
         uses: mamba-org/setup-micromamba@v2
         with:
-          environment-file: environment.yml 
+          environment-file: environment.yml
           cache-environment: true
+          # This creates a reliable 'micromamba-shell' for the next steps
+          generate-run-shell: true
 
       - name: Install CI Tools
-        shell: bash -l {0}
+        # Use the custom shell that 'setup-micromamba' provides
+        shell: micromamba-shell {0}
         run: |
-          # Install ruff, nbconvert, and your analysis tools
           python -m pip install ruff nbconvert scanpy scvi-tools
 
       - name: Run Ruff (Linting)
-        shell: bash -l {0}
+        shell: micromamba-shell {0}
         run: |
           ruff check . --output-format=github
 
       - name: Convert and Compile Notebooks
-        shell: bash -l {0}
+        shell: micromamba-shell {0}
         run: |
           # 1. Convert notebooks to python scripts
-          jupyter nbconvert --to python notebooks/*.ipynb
-          
-          # 2. Loop through and check for syntax errors
-          for file in notebooks/*.py; do
-            echo "Checking $file..."
-            python -m py_compile "$file"
-          done
+          mkdir -p notebooks
+          if ls notebooks/*.ipynb 1> /dev/null 2>&1; then
+            jupyter nbconvert --to python notebooks/*.ipynb
+            
+            # 2. Loop through and check for syntax errors
+            for file in notebooks/*.py; do
+              echo "Checking $file..."
+              python -m py_compile "$file"
+            done
+          else
+            echo "No notebooks found in notebooks/ folder."
+          fi
